@@ -1,0 +1,53 @@
+---
+title: "트위터 분석(Twitter Research)"
+output:
+  html_notebook: default
+  html_document: default
+---
+
+
+> ##### **(1) 개발자 키 받기**
+
+- https://apps.twitter.com/ 방문 후 양식 작성.
+- API 키, access 토큰 확인.
+
+> ##### **(2) 데이터 긁어오기**
+
+- twitteR 패키지 설치.
+- 콘솔창에 OAuth 관련 질문이 나오면 1번(YES) 선택.
+- 트윗을 수집을 해서 데이터 프레임에 넣음. (twitterResult)
+- head(twitterResult) 로 데이터를 출력해봄.
+- 텍스트 파일과 csv 파일로 working directory에 저장함.
+- 저장된 파일의 경로는 getwd()를 적용해서 확인함.
+- 트위터에서 #korea 해시태그가 있는 트윗을 50개 출력함. (2017년 11월 8일 이후)
+
+
+```{r}
+install.packages("twitteR")
+library(twitteR)
+
+consumer_key <- "KODHPZHoR8YmNQkBD9h2mA"
+consumer_secret <- "zdAfmQlHdkE7NbyA77Sc66EGQMZ9q4W1IchtVQJVr8"
+access_token <- "368096432-iCnZs0Age0v47hvynF08FSOxRhTOyzkz2UMy0gS0"
+access_secret <- "hfIMz92FDfNdTTmUK0tmi0r70szZMELuJF6KAgBUP0w"
+
+setup_twitter_oauth(consumer_key, consumer_secret, access_token, access_secret)
+```
+
+```{r}
+ tw = twitteR::searchTwitter("#korea", n = 50, since = "2017-11-08", retryOnRateLimit = 3)
+ twitterResult = twitteR::twListToDF(tw)
+ 
+ write.csv(twitterResult, "twitter.csv", row.names = TRUE)
+ write.table(twitterResult, file = "twitter.txt", sep = "\t")
+ 
+ # getwd() #check file location
+ head(twitterResult)
+```
+
+> ##### **(3) 데이터 확인하기**
+
+- Working Directory에 가서 확인하기. -> `getwd()` 명령어를 콘솔창에서 실행
+- RStudio 오른쪽의 Environment 탭에서 확인
+- [twitterResult 오른쪽 테이블 아이콘 클릭]
+
